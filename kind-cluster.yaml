@@ -1,0 +1,13 @@
+# Definice Kubernetes clusteru pro kind (Kubernetes in Docker)
+# 1x control-plane + 2x worker = cluster se "at least two nodes"
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: o2-homework
+nodes:
+  - role: control-plane
+    # zpristupni NodePort service-a (30080) z hostitelskeho pocitace
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 30080
+  - role: worker
+  - role: worker

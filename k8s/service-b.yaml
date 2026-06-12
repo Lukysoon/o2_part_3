@@ -1,0 +1,12 @@
+# Service B - stabilni virtualni IP + DNS jmeno "service-b",
+# load-balancuje na vsechny pody s labelem app=b
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+spec:
+  selector:
+    app: b
+  ports:
+    - port: 8080
+      targetPort: 8080

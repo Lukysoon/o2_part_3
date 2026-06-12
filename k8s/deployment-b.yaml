@@ -1,0 +1,48 @@
+# App B (backend) - 2 repliky rozprostrene na ruzne worker uzly
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-b
+  labels:
+    app: b
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: b          # label selector (viz Figure 1: s:app=B)
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1         # behem update muze vzniknout 1 pod navic
+      maxUnavailable: 0   # zadny pod nesmi chybet -> zero-downtime
+  template:
+    metadata:
+      labels:
+        app: b        # label podu (viz Figure 1: app=B)
+    spec:
+      # Repliky se rozlozi rovnomerne pres uzly (parts on multiple nodes)
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          nodeTaintsPolicy: Honor       # control-plane (taint) se nepocita do skew
+          matchLabelKeys:
+            - pod-template-hash         # kazda revize se rozprostira nezavisle (rolling update)
+          labelSelector:
+            matchLabels:
+              app: b
+      containers:
+        - name: app-b
+          image: app-b:v1
+          imagePullPolicy: IfNotPresent   # image nahrana primo do kind, ne z registry
+          env:
+            - name: APP_VERSION
+              value: "v1"
+          ports:
+            - containerPort: 8080
+          readinessProbe:               # Service posila provoz az kdyz pod odpovida
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3

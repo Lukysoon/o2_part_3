@@ -1,0 +1,32 @@
+# App A (frontend) - vola app B pres service DNS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-a
+  labels:
+    app: a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: a
+  template:
+    metadata:
+      labels:
+        app: a
+    spec:
+      containers:
+        - name: app-a
+          image: app-a:v1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BACKEND_URL
+              value: "http://service-b:8080"   # DNS jmeno Service B
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz    # nezavisi na dostupnosti app B
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# IDE / editory
+.idea/
+.vscode/
+*.swp
+
+# macOS
+.DS_Store
+
+# Claude Code
+.claude/
+
+# lokální kubeconfig / secrety
+*.kubeconfig
+.env

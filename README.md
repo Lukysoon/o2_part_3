@@ -1,8 +1,7 @@
 # Kubernetes homework
 
 Aplikace o dvou částech: **app A** (frontend) volá **app B** (backend, 2 repliky
-na různých uzlech) přes Kubernetes Service. Cluster má 3 uzly (1 control-plane
-+ 2 workery) a běží lokálně přes [kind](https://kind.sigs.k8s.io/).
+na různých uzlech) přes Kubernetes Service. Cluster má 3 uzly (1 control-plane a 2 workery) a běží lokálně přes [kind](https://kind.sigs.k8s.io/).
 
 ```
 kind-cluster.yaml   definice clusteru
